@@ -1,8 +1,11 @@
 ﻿using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MyHome.Api.Constants;
 using MyHome.Application.Abstraction;
 using MyHome.Application.Commands;
 using MyHome.Application.Models;
@@ -62,10 +65,15 @@ namespace MyHome.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(CreateUserCommand user)
         {
-            return Ok(await _mediator.Send(user));
+            var result = await _mediator.Send(user);
+            if (result == null)
+                return BadRequest();
+            else
+                return NoContent();
         }
 
         [HttpPost(nameof(PostRole))]
+        [Authorize(Roles = UserType.SupervisorAdmin)]
         public async Task<IActionResult> PostRole([FromForm]RoleTypeDto role)
         {
             var result = await _roleService.CreateRole(role);
@@ -76,6 +84,7 @@ namespace MyHome.Api.Controllers
         }
 
         [HttpPost(nameof(ChangeUserEmail))]
+        [Authorize(AuthenticationSchemes = "Default")]
         public async Task<IActionResult> ChangeUserEmail(ChangeUserEmailCommand input)
         {
             var res = await _mediator.Send(input);

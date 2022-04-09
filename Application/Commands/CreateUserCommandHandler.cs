@@ -38,9 +38,9 @@ namespace MyHome.Application.Commands
                 var userCreated = await _userManager.CreateAsync(newUser, request.Password);
 
                 var userClaims = new List<Claim>();
-                userClaims.Add(new Claim("id", newUser.Id.ToString()));
-                userClaims.Add(new Claim("email", newUser.Email));
-                userClaims.Add(new Claim("phone", newUser.PhoneNumber));
+                userClaims.Add(new Claim(ClaimTypes.NameIdentifier, newUser.Id.ToString()));
+                userClaims.Add(new Claim(ClaimTypes.Email, newUser.Email));
+                userClaims.Add(new Claim(ClaimTypes.MobilePhone, newUser.PhoneNumber));
 
                 await _userManager.AddClaimsAsync(newUser, userClaims);
 

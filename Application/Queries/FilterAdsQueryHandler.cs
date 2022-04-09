@@ -25,7 +25,6 @@ namespace MyHome.Application.Queries
             var ads = _adRepository.GetQueries(i => i.AdStatus == AdStatus.Active)
                                    .Include(i => i.AdvertainmentFeatures)
                                    .ThenInclude(i => i.FeatureItem)
-                                   
                                    .AsQueryable();
 
             if (request.MinPrice != null)
@@ -44,10 +43,10 @@ namespace MyHome.Application.Queries
             if (request.MinArea == null && request.MaxArea != null)
                 ads = ads.Where(i => i.Area < request.MaxArea);
 
-            if (request.CadastralCode != null)
+            if (!string.IsNullOrEmpty(request.CadastralCode))
                 ads = ads.Where(i => i.CadastralCode.Contains(request.CadastralCode));
 
-            if (request.Adress != null)
+            if (!string.IsNullOrEmpty(request.Adress))
                 ads = ads.Where(i => i.Adress.ToLower().Contains(request.Adress.ToLower()));
 
             foreach (var featureItem in request.AdFeatureItems)
@@ -74,7 +73,10 @@ namespace MyHome.Application.Queries
                  UserName = i.User.UserName,
                  UserEmail = i.User.Email,
                  UserPhone = i.User.PhoneNumber
-            }).Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).ToListAsync();
+            })
+                .Skip((request.Page - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .ToListAsync();
         }
     }
 }

@@ -11,5 +11,6 @@ namespace MyHome.Api.Constants
         public const string Supervisor = "Supervisor";
         public const string User = "User";
         public const string AdminUser = "Admin, User";
+        public const string SupervisorAdmin = "Supervisor, Admin";
     }
 }
