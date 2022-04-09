@@ -60,7 +60,7 @@ namespace MyHome.Application.Queries
                                               (o.FeatureItem.FeatureType == FeatureItemType.Select
                                               && o.FeatureItemSelectId == featureItem.FeatureItemSelectId))));
             }
-            
+            //return
             return await ads.Select(i => new AdDetailsDto() 
             {
                  Adress = i.Adress,
